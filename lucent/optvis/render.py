@@ -43,7 +43,7 @@ def render_vis(
     fixed_image_size=None,
 ):
     if param_f is None:
-        param_f = lambda: param.image(128)
+        param_f = lambda: param.image(224, channels=1)
     # param_f is a function that should return two things
     # params - parameters to update, which we pass to the optimizer
     # image_f - a function that returns an image as a tensor
@@ -159,7 +159,9 @@ def export(tensor, image_name=None):
     image = (image * 255).astype(np.uint8)
     if len(image.shape) == 4:
         image = np.concatenate(image, axis=1)
-    Image.fromarray(image).save(image_name)
+    # todo enable grayscale support via if.
+    image = np.squeeze(image)
+    Image.fromarray(image, mode="L").save(image_name)
 
 
 class ModuleHook:
